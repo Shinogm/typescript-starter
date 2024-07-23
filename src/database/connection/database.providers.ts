@@ -1,9 +1,9 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 export const databaseProviders = [
   {
     provide: 'DATABASE_CONNECTION',
-    useFactory: (): Promise<typeof mongoose> =>
-      mongoose.connect('mongodb://localhost/nest'),
+    useFactory: async (): Promise<typeof mongoose> =>
+      await mongoose.connect('mongodb://localhost/nest'),
   },
 ];
