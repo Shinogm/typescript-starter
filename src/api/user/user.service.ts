@@ -27,4 +27,13 @@ export class UserService {
     }
     return user;
   }
+
+  async findByEmail(email: string) {
+    const user = await this.userModel.findOne({ email }).exec();
+
+    if (!user) {
+      throw new Error(`User with email ${email} not found`);
+    }
+    return user;
+  }
 }

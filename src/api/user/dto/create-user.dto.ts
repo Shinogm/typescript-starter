@@ -4,7 +4,6 @@ import {
   MaxLength,
   IsEmail,
   IsOptional,
-  IsHash,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -30,6 +29,5 @@ export class CreateUserDto {
   @IsString()
   @MinLength(1)
   @MaxLength(100)
-  @IsHash('sha256')
   readonly password: string;
 }
