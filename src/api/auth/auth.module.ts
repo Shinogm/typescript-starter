@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
 import { jwtConstants } from './guard/constants';
+import { CookiesService } from './cookies/cookies.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { jwtConstants } from './guard/constants';
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, CookiesService],
   controllers: [AuthController],
   exports: [AuthService],
 })
