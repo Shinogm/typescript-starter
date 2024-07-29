@@ -1,33 +1,26 @@
-import {
-  IsString,
-  MinLength,
-  MaxLength,
-  IsEmail,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { UserInterface } from 'src/api/user/interface/user.interface';
 
-export class CreateUserDto {
+export class CreateUserDto implements UserInterface {
+  @Expose()
   @IsString()
-  @MinLength(1)
-  @MaxLength(50)
-  readonly name: string;
+  name: string;
 
+  @Expose()
   @IsString()
-  @MinLength(1)
-  @MaxLength(50)
-  readonly lastName: string;
+  lastName: string;
 
-  @IsString()
-  @MinLength(1)
-  @MaxLength(10)
+  @Expose()
   @IsOptional()
-  readonly phone?: string;
-
-  @IsEmail()
-  readonly email: string;
-
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
-  readonly password: string;
+  phone?: string;
+
+  @Expose()
+  @IsEmail()
+  email: string;
+
+  @Expose()
+  @IsString()
+  password: string;
 }

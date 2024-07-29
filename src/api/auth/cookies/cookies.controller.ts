@@ -1,34 +1,35 @@
-import { Controller, Get, Post, Req, Res, Body, Query } from '@nestjs/common';
+import { Controller, Get, Req, Res } from '@nestjs/common';
 import { CookiesService } from './cookies.service';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { CreateCookieDto } from './dto/create-cookie.dto';
+import { Request, Response } from 'express';
 
 @Controller('cookies')
 export class CookiesController {
   constructor(private readonly cookiesService: CookiesService) {}
 
-  @Post('set')
-  setCookie(@Body() setCookieDto: CreateCookieDto, @Res() res: FastifyReply) {
-    const { name, value, options } = setCookieDto;
-    this.cookiesService.setCookie(res, name, value, options);
-    res.send({ message: 'Cookie set successfully' });
+  @Get('set')
+  setCookie(@Res() response: Response) {
+    this.cookiesService.setCookie(response, 'test', 'value', {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60,
+    });
+    response.send('Cookie set');
   }
 
   @Get('get')
-  getCookie(@Query('name') name: string, @Req() req: FastifyRequest) {
-    const value = this.cookiesService.getCookie(req, name);
-    return { name, value };
+  getCookie(@Req() request: Request) {
+    const cookie = this.cookiesService.getCookie(request, 'test');
+    return { cookie };
   }
 
-  @Post('remove')
-  removeCookie(@Body('name') name: string, @Res() res: FastifyReply) {
-    this.cookiesService.removeCookie(res, name);
-    res.send({ message: 'Cookie removed successfully' });
+  @Get('remove')
+  removeCookie(@Res() response: Response) {
+    this.cookiesService.removeCookie(response, 'test');
+    response.send('Cookie removed');
   }
 
   @Get('all')
-  getAllCookies(@Req() req: FastifyRequest) {
-    const cookies = this.cookiesService.allCookies(req);
+  allCookies(@Req() request: Request) {
+    const cookies = this.cookiesService.allCookies(request);
     return { cookies };
   }
 }

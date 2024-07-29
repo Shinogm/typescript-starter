@@ -1,11 +1,13 @@
-import mongoose, { Connection } from 'mongoose';
-import { userSchema } from 'src/database/schema/user.schema';
+// user.providers.ts
+import { Provider } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from '../user/user.service';
+import { CookiesService } from '../auth/cookies/cookies.service';
+import { AuthService } from '../auth/auth.service';
 
-export const userProviders = [
-  {
-    provide: 'USER_MODEL',
-    useFactory: (connection: Connection): mongoose.Model<any> =>
-      connection.model('User', userSchema),
-    inject: ['DATABASE_CONNECTION'],
-  },
+export const userProviders: Provider[] = [
+  UserService,
+  JwtService,
+  CookiesService,
+  AuthService,
 ];

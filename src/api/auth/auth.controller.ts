@@ -1,38 +1,19 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './guard/auth.guard';
+import { Response } from 'express';
 import { Public } from './guard/auth.public';
-import { FastifyReply } from 'fastify';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
-
+  constructor(private readonly authService: AuthService) {}
   @Public()
-  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async signIn(
-    @Body() body: { email: string; password: string },
-    @Res() res: FastifyReply,
+  async login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+    @Res() res: Response,
   ) {
-    const { email, password } = body;
-    const response = await this.authService.signIn(email, password, res);
-    res.send(response);
-  }
-  @Public()
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req) {
-    return req.user;
+    const result = await this.authService.signIn(email, password, res);
+    res.send(result);
   }
 }

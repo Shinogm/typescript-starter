@@ -1,21 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import fastifyCookie from '@fastify/cookie';
-import {
-  NestFastifyApplication,
-  FastifyAdapter,
-} from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
-import { cookieConstants } from './api/auth/guard/constants';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
-  await app.register(fastifyCookie, {
-    secret: cookieConstants.secret,
-  });
+  const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
+
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({

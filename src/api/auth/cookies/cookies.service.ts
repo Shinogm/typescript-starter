@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class CookiesService {
   constructor() {}
 
   setCookie(
-    response: FastifyReply,
+    response: Response,
     name: string,
     value: string,
     options?: {
@@ -16,7 +16,7 @@ export class CookiesService {
       maxAge?: number;
     },
   ) {
-    response.setCookie(name, value, {
+    response.cookie(name, value, {
       path: options?.path ?? '/',
       httpOnly: options?.httpOnly ?? true,
       secure: options?.secure ?? process.env.NODE_ENV === 'production',
@@ -24,17 +24,17 @@ export class CookiesService {
     });
   }
 
-  getCookie(request: FastifyRequest, name: string): string | undefined {
+  getCookie(request: Request, name: string): string | undefined {
     return request.cookies[name];
   }
 
-  removeCookie(response: FastifyReply, name: string) {
+  removeCookie(response: Response, name: string) {
     response.clearCookie(name, {
       path: '/',
     });
   }
 
-  allCookies(request: FastifyRequest) {
+  allCookies(request: Request) {
     return request.cookies;
   }
 }
