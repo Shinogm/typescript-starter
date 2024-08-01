@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Public } from '../auth/guard/auth.public';
+import { UseCookieGuard } from '../auth/cookies/middleware/m.cookie.cookie';
 
 @Controller('users')
 export class UserController {
@@ -27,7 +28,8 @@ export class UserController {
       throw new HttpException('Error creating user', HttpStatus.BAD_REQUEST);
     }
   }
-
+  @Public()
+  @UseCookieGuard()
   @Get('/all')
   async findAll() {
     try {

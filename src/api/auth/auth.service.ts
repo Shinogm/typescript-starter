@@ -27,11 +27,15 @@ export class AuthService {
       }
 
       const payload = { sub: user._id, name: user.name, email: user.email };
-      const access_token = await this.jwtService.signAsync(payload);
+      const access_token = await this.jwtService.signAsync(payload, {
+        expiresIn: '7d',
+      });
 
       this.cookiesService.setCookie(res, 'access_token', access_token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
       });
 
       return {
@@ -43,6 +47,18 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials');
       }
       this.logger.error(`Error during sign-in: ${error.message}`);
+      throw new UnauthorizedException('Invalid credentials');
+    }
+  }
+
+  async signOut(res: Response) {
+    try {
+      this.cookiesService.removeCookie(res, 'access_token');
+      return {
+        message: 'Sign out successful',
+      };
+    } catch (error) {
+      this.logger.error(`Error during sign-out: ${error.message}`);
       throw new UnauthorizedException('Invalid credentials');
     }
   }
