@@ -1,42 +1,34 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SwaggerMethod } from 'src/swagger/decorators.service';
+import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../auth/guard/auth.public';
-import { UseCookieGuard } from '../auth/cookies/middleware/m.cookie.cookie';
+import { ValidateBody } from 'src/common/decorators/validate-body.decorator';
+import { Controller, HttpStatus } from '@nestjs/common';
 
+@ApiTags('Users')
+@Public()
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  @Post('/create')
-  async create(@Body() createUserDto: CreateUserDto) {
-    try {
-      return await this.userService.create(createUserDto);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new HttpException(error.message, HttpStatus.FOUND);
-      }
-      throw new HttpException('Error creating user', HttpStatus.BAD_REQUEST);
-    }
+  @SwaggerMethod({
+    method: 'POST',
+    route: '/create/v1',
+    httpCode: HttpStatus.OK,
+    consumes: 'application/x-www-form-urlencoded',
+    operationSummary: 'Create a new user',
+  })
+  async create(@ValidateBody(CreateUserDto) createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
-  @Public()
-  @UseCookieGuard()
-  @Get('/all')
+  @SwaggerMethod({
+    method: 'GET',
+    route: '/all/v1',
+    cookieGuard: true,
+    httpCode: HttpStatus.OK,
+    operationSummary: 'Get all users',
+  })
   async findAll() {
-    try {
-      return await this.userService.findAll();
-    } catch (error) {
-      console.error('Error finding all users:', error);
-      throw new Error('Failed to find users');
-    }
+    return await this.userService.findAll();
   }
 }

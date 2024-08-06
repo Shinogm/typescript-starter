@@ -1,8 +1,8 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserInterface } from './interface/user.interface';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserRole } from './dto/create-user.dto';
 import { UserSchemaDB } from 'src/database/schema/user.schema'; // Adjust the import path
 import { CustomPinoLogger } from 'src/pino/pino.logger';
 
@@ -16,16 +16,18 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserInterface> {
     const existingUser = await this.findByEmail(createUserDto.email);
     if (existingUser) {
-      throw new Error('User already exists');
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
-
-    const createdUser = new this.userModel(createUserDto);
+    const userRole = createUserDto.role || UserRole.USER;
+    const createdUser = new this.userModel({
+      ...createUserDto,
+      role: userRole,
+    });
 
     try {
       return await createdUser.save();
     } catch (error) {
-      console.log('Error creating user:', error);
-      throw error;
+      throw new HttpException('Error creating user', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -33,8 +35,10 @@ export class UserService {
     try {
       return await this.userModel.find().exec();
     } catch (error) {
-      console.error('Error finding all users:', error);
-      throw new Error('Failed to find users');
+      throw new HttpException(
+        'Error finding all users',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -42,12 +46,15 @@ export class UserService {
     try {
       const user = await this.userModel.findById(id).exec();
       if (!user) {
-        throw new Error(`User with ID ${id} not found`);
+        throw new HttpException(
+          `User with ID ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
       }
       return user;
     } catch (error) {
       console.error(`Error finding user by ID ${id}:`, error);
-      throw new Error('Failed to find user');
+      throw new HttpException('Failed to find user', HttpStatus.BAD_REQUEST);
     }
   }
 

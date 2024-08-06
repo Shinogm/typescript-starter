@@ -1,0 +1,17 @@
+export enum MessageException {
+  CUSTOMER_NOT_FOUND = 'Requested customer was not found.',
+  MISSING_PARAMETERS = 'There is a problem/conflict with the query params.',
+  UNAUTHORIZED = 'Unauthorized',
+  COUPON_NOT_ALLOWED = 'Coupon is not allowed on this type of plan change.',
+  INVALID_COUPON = 'The provided coupon could not be applied to any plan.',
+  PLAN_CHANGE_NOT_ALLOWED = 'Requested plan change is not allowed for your subscription.',
+  SUBSCRIPTION_NOT_FOUND = 'Customer subscription was not found.',
+  PENDING_PLAN_ERROR = 'The current plan has a pending change in course.',
+  COMPANION_QUANTITY_INVALID = 'Value of property companionsQuantity is out of limits.',
+  COMPANION_NOT_ALLOWED = 'Property companionsQuantity is not allowed for this plan.',
+  REQUIRED_ADDONS_ERROR = 'The plan has required add ons.',
+  REQUIRED_ADDONS_BOUNDARIES_ERROR = 'The required add ons are outside of the limits.',
+  GENERIC_VALIDATION_ERROR = 'Provided data is invalid.',
+  USER_EXISTING = 'User email already exists.',
+  USER_NOT_FOUND = 'User not found',
+}

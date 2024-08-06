@@ -35,6 +35,13 @@ export class UserSchemaDB implements UserInterface {
   @Prop({
     type: String,
     required: true,
+    default: 'user',
+  })
+  role: string;
+
+  @Prop({
+    type: String,
+    required: true,
   })
   password: string;
 }
