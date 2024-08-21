@@ -18,13 +18,17 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Api Documendescriptiontation')
+    .setTitle('API Documentation')
     .setDescription('The API documentation')
     .addCookieAuth('access_token')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
-  await app.listen(3000);
+
+  SwaggerModule.setup('docs', app, document, {
+    customJs: 'src/common/decorators/custom.js',
+  });
+
+  await app.listen(3001);
 }
 bootstrap();

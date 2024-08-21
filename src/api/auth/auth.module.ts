@@ -6,6 +6,8 @@ import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
 import { jwtConstants } from './guard/constants';
 import { CookiesService } from './cookies/cookies.service';
+import { MetamaskService } from './metamask/metamask.service';
+import { MetamaskModule } from './metamask/metamask.module';
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import { CookiesService } from './cookies/cookies.service';
       global: true,
       secret: jwtConstants.secret,
     }),
+    MetamaskModule,
   ],
-  providers: [AuthService, CookiesService],
+  providers: [AuthService, CookiesService, MetamaskService],
   controllers: [AuthController],
   exports: [AuthService],
 })

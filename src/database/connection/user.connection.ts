@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { MongoConfigService } from '../mongo.config.service';
 import {
   MongooseModuleOptions,
@@ -9,10 +8,7 @@ import { MongooseError } from 'mongoose';
 
 @Injectable()
 export class UserConnection implements MongooseOptionsFactory {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly mongoConfigService: MongoConfigService,
-  ) {}
+  constructor(private readonly mongoConfigService: MongoConfigService) {}
 
   async createMongooseOptions(): Promise<MongooseModuleOptions> {
     try {

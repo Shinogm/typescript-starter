@@ -25,6 +25,9 @@ export class UserSchemaDB implements UserInterface {
   })
   phone?: string;
 
+  @Prop({ type: String })
+  age?: number;
+
   @Prop({
     type: String,
     unique: true,

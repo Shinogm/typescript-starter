@@ -11,7 +11,7 @@ export class SignInDto {
     type: String,
   })
   @IsString({
-    message: 'Email,Email must be at least 1 characters long',
+    message: 'Email,Email must be a string',
   })
   @MinLength(1, { message: 'Email,Email must be at least 1 characters long' })
   @MaxLength(50, { message: 'Email,Email must be at most 50 characters long' })
@@ -28,7 +28,7 @@ export class SignInDto {
   @IsString({
     message: 'Password,Password must be at least 8 characters long',
   })
-  @MinLength(1, {
+  @MinLength(8, {
     message: 'Password,Password must be at least 8 characters long',
   })
   @MaxLength(100, {

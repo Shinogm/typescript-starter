@@ -14,9 +14,11 @@ export class UserController {
   @SwaggerMethod({
     method: 'POST',
     route: '/create/v1',
+    public: true,
     httpCode: HttpStatus.OK,
-    consumes: 'application/x-www-form-urlencoded',
     operationSummary: 'Create a new user',
+    consumes: 'application/x-www-form-urlencoded',
+    body: CreateUserDto,
   })
   async create(@ValidateBody(CreateUserDto) createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);

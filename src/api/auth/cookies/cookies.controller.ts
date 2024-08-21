@@ -10,7 +10,6 @@ export class CookiesController {
   setCookie(@Res() response: Response) {
     this.cookiesService.setCookie(response, 'test', 'value', {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60,
     });
     response.send('Cookie set');
   }
